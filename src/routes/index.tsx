@@ -152,98 +152,120 @@ function Avatar({
   );
 }
 
-function PodiumCard({
+const PODIUM_META: Record<
+  1 | 2 | 3,
+  {
+    badge: string;
+    ring: string;
+    bar: string;
+    barHeight: string;
+    label: string;
+  }
+> = {
+  1: {
+    badge: "bg-gold text-gold-foreground",
+    ring: "ring-4 ring-gold/50",
+    bar: "bg-gradient-to-b from-gold/30 to-gold/10 border-gold/50",
+    barHeight: "h-14 sm:h-20",
+    label: "text-gold-foreground",
+  },
+  2: {
+    badge: "bg-silver text-silver-foreground",
+    ring: "ring-4 ring-silver/60",
+    bar: "bg-gradient-to-b from-silver/50 to-silver/15 border-silver/70",
+    barHeight: "h-9 sm:h-12",
+    label: "text-silver-foreground",
+  },
+  3: {
+    badge: "bg-bronze text-bronze-foreground",
+    ring: "ring-4 ring-bronze/50",
+    bar: "bg-gradient-to-b from-bronze/30 to-bronze/10 border-bronze/60",
+    barHeight: "h-7 sm:h-9",
+    label: "text-bronze-foreground",
+  },
+};
+
+function PodiumSlot({
   participant,
   position,
 }: {
   participant: RankedParticipant;
   position: 1 | 2 | 3;
 }) {
+  const meta = PODIUM_META[position];
   const isFirst = position === 1;
-
-  const medalStyles: Record<number, string> = {
-    1: "border-gold/60 bg-gradient-to-b from-gold/25 via-card to-card shadow-[0_16px_44px_-14px_oklch(0.65_0.12_85/45%)]",
-    2: "border-silver/70 bg-card shadow-card",
-    3: "border-bronze/60 bg-card shadow-card",
-  };
-
-  const badgeStyles: Record<number, string> = {
-    1: "bg-gold text-gold-foreground",
-    2: "bg-silver text-silver-foreground",
-    3: "bg-bronze text-bronze-foreground",
-  };
 
   return (
     <div
       className={cn(
-        "flex flex-col",
+        "group flex min-w-0 flex-col items-center text-center",
         position === 1 && "order-1 sm:order-2",
         position === 2 && "order-2 sm:order-1",
         position === 3 && "order-3"
       )}
     >
-      <div
-        className={cn(
-          "relative flex w-full flex-col items-center rounded-2xl border px-4 pb-5 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-elevated",
-          medalStyles[position],
-          isFirst ? "pt-8 sm:pt-10" : "pt-6 sm:pt-7"
-        )}
-      >
-        <div
-          className={cn(
-            "absolute -top-3.5 grid h-7 min-w-7 place-items-center rounded-full px-2 font-display text-sm font-bold shadow-sm",
-            badgeStyles[position]
-          )}
-        >
-          {position}
-        </div>
-
+      {/* Player info */}
+      <div className="relative flex flex-col items-center transition-transform duration-300 group-hover:-translate-y-1">
         {isFirst && (
-          <div className="mb-2 flex items-center gap-1.5 text-gold-foreground">
-            <Crown className="h-5 w-5" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.12em]">
-              Challenge Leader
-            </span>
-          </div>
+          <Crown className="mb-1 h-5 w-5 text-gold drop-shadow-sm" />
         )}
-
-        <Avatar
-          initials={participant.avatar}
-          className={cn(isFirst ? "h-16 w-16 text-lg" : "h-12 w-12 text-sm")}
-          ringClassName={cn(
-            isFirst && "ring-4 ring-gold/40",
-            position === 2 && "ring-4 ring-silver/50",
-            position === 3 && "ring-4 ring-bronze/40"
-          )}
-        />
-
-        <h3
+        <div className="relative">
+          <Avatar
+            initials={participant.avatar}
+            className={cn(
+              isFirst ? "h-16 w-16 text-lg sm:h-20 sm:w-20 sm:text-xl" : "h-12 w-12 text-sm sm:h-14 sm:w-14"
+            )}
+            ringClassName={meta.ring}
+          />
+          <span
+            className={cn(
+              "absolute -bottom-2 left-1/2 grid h-6 min-w-6 -translate-x-1/2 place-items-center rounded-full px-1.5 font-display text-xs font-bold shadow-sm",
+              meta.badge
+            )}
+          >
+            {position}
+          </span>
+        </div>
+        <p
           className={cn(
-            "mt-3 font-display font-bold leading-tight text-foreground",
-            isFirst ? "text-lg" : "text-sm sm:text-base"
+            "mt-3.5 max-w-full truncate font-display font-bold leading-tight text-foreground",
+            isFirst ? "text-base sm:text-lg" : "text-sm"
           )}
         >
           {participant.name}
-        </h3>
-
+        </p>
         <p
           className={cn(
-            "mt-1 font-display font-bold text-foreground",
-            isFirst ? "text-3xl sm:text-4xl" : "text-xl sm:text-2xl"
+            "mt-0.5 font-display font-bold text-foreground",
+            isFirst ? "text-xl sm:text-2xl" : "text-base sm:text-lg"
           )}
         >
           {formatINR(participant.earnings)}
         </p>
-
-        <div className="mt-2 flex items-center gap-2">
+        <div className="mt-1">
           <RankMovement
             currentRank={participant.rank}
             previousRank={participant.previousRank}
           />
-          <span className="text-[11px] font-medium text-muted-foreground">
-            earned
-          </span>
         </div>
+      </div>
+
+      {/* Podium bar */}
+      <div
+        className={cn(
+          "mt-3 flex w-full items-start justify-center rounded-t-xl border border-b-0 transition-all duration-300 group-hover:brightness-[1.03]",
+          meta.bar,
+          meta.barHeight
+        )}
+      >
+        <span
+          className={cn(
+            "mt-2 font-display text-xs font-bold uppercase tracking-[0.15em]",
+            meta.label
+          )}
+        >
+          {isFirst ? "Leader" : `#${position}`}
+        </span>
       </div>
     </div>
   );
@@ -253,7 +275,7 @@ function LeaderboardRow({ participant }: { participant: RankedParticipant }) {
   return (
     <div
       className={cn(
-        "group grid grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-3 rounded-xl border px-3.5 py-3 transition-all duration-200 sm:grid-cols-[3rem_minmax(0,1fr)_auto_auto] sm:gap-4 sm:px-5 sm:py-3.5",
+        "group grid grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-3 rounded-lg border px-3 py-2.5 transition-all duration-200 sm:grid-cols-[2.5rem_minmax(0,1fr)_auto_3.5rem] sm:gap-4 sm:px-4",
         participant.isCurrentUser
           ? "border-primary/40 bg-primary/[0.06] shadow-[0_0_0_1px_var(--color-primary)] hover:shadow-[0_0_0_1px_var(--color-primary),0_8px_24px_-10px_oklch(0.52_0.235_264/35%)]"
           : "border-border bg-card hover:-translate-y-px hover:border-primary/25 hover:shadow-card"
@@ -261,7 +283,7 @@ function LeaderboardRow({ participant }: { participant: RankedParticipant }) {
     >
       <span
         className={cn(
-          "grid h-9 w-9 place-items-center rounded-lg font-display text-sm font-bold sm:h-10 sm:w-10 sm:text-base",
+          "grid h-8 w-8 place-items-center rounded-md font-display text-sm font-bold",
           participant.isCurrentUser
             ? "bg-primary text-primary-foreground"
             : "bg-muted text-muted-foreground group-hover:text-foreground"
@@ -270,35 +292,31 @@ function LeaderboardRow({ participant }: { participant: RankedParticipant }) {
         {participant.rank}
       </span>
 
-      <div className="flex min-w-0 items-center gap-3">
+      <div className="flex min-w-0 items-center gap-2.5">
         <Avatar
           initials={participant.avatar}
-          className="h-9 w-9 text-xs sm:h-10 sm:w-10 sm:text-sm"
+          className="h-8 w-8 text-[11px] sm:h-9 sm:w-9 sm:text-xs"
         />
-        <div className="min-w-0">
-          <p className="flex items-center gap-2 truncate font-display text-[15px] font-semibold text-foreground sm:text-base">
-            <span className="truncate">{participant.name}</span>
-            {participant.isCurrentUser && (
-              <span className="inline-flex shrink-0 items-center rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary-foreground">
-                You
-              </span>
-            )}
-          </p>
-          <p className="text-xs text-muted-foreground sm:hidden">
-            {formatINR(participant.earnings)} earned
-          </p>
-        </div>
+        <p className="flex min-w-0 items-center gap-2 font-display text-sm font-semibold text-foreground sm:text-[15px]">
+          <span className="truncate">{participant.name}</span>
+          {participant.isCurrentUser && (
+            <span className="inline-flex shrink-0 items-center rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary-foreground">
+              You
+            </span>
+          )}
+        </p>
       </div>
 
-      <p className="hidden font-display text-lg font-bold text-foreground sm:block">
-        {formatINR(participant.earnings)}
-      </p>
-
-      <div className="flex justify-end sm:w-16 sm:justify-center">
-        <RankMovement
-          currentRank={participant.rank}
-          previousRank={participant.previousRank}
-        />
+      <div className="flex items-center gap-3 sm:contents">
+        <p className="font-display text-sm font-bold text-foreground sm:text-base">
+          {formatINR(participant.earnings)}
+        </p>
+        <div className="flex justify-end sm:justify-center">
+          <RankMovement
+            currentRank={participant.rank}
+            previousRank={participant.previousRank}
+          />
+        </div>
       </div>
     </div>
   );
@@ -324,12 +342,12 @@ function YourStandingCard({
     : 100;
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-card sm:p-6">
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-4">
+    <div className="relative overflow-hidden rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 via-card to-card p-4 shadow-card sm:p-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3.5">
           <Avatar
             initials={currentUser.avatar}
-            className="h-14 w-14 text-base"
+            className="h-12 w-12 text-sm"
             ringClassName="ring-4 ring-primary/20"
           />
           <div>
@@ -337,10 +355,10 @@ function YourStandingCard({
               Your Standing
             </p>
             <div className="mt-0.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <span className="font-display text-2xl font-bold text-foreground sm:text-3xl">
+              <span className="font-display text-xl font-bold text-foreground sm:text-2xl">
                 {formatINR(currentUser.earnings)}
               </span>
-              <span className="flex items-center gap-1.5 font-display text-lg font-bold text-primary sm:text-xl">
+              <span className="flex items-center gap-1.5 font-display text-base font-bold text-primary sm:text-lg">
                 #{currentUser.rank}
                 <RankMovement
                   currentRank={currentUser.rank}
@@ -361,15 +379,15 @@ function YourStandingCard({
                 <Target className="h-4 w-4 text-accent" />
                 {formatINR(gap)} more to reach #{currentUser.rank - 1}
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Overtake {nextParticipant.name.split(" ")[0]} — one gig, sale or referral can do it.
-              </p>
-              <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted">
+              <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-muted">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-700"
                   style={{ width: `${progress}%` }}
                 />
               </div>
+              <p className="mt-1.5 text-xs text-muted-foreground">
+                One gig, sale or referral can overtake {nextParticipant.name.split(" ")[0]}.
+              </p>
             </>
           ) : (
             <p className="flex items-center gap-1.5 text-sm font-semibold text-foreground sm:justify-end">
@@ -397,7 +415,7 @@ function FilterTabs({
           key={filter}
           onClick={() => onChange(filter)}
           className={cn(
-            "rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200 sm:px-5",
+            "rounded-full px-4 py-1.5 text-sm font-semibold transition-all duration-200 sm:px-5",
             active === filter
               ? "bg-primary text-primary-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground"
@@ -421,10 +439,10 @@ function LeaderboardPage() {
     : undefined;
 
   return (
-    <main className="min-h-screen bg-background pb-16 sm:pb-20">
+    <main className="min-h-screen bg-background pb-14">
       {/* Header */}
       <header className="sticky top-0 z-30 border-b bg-background/85 backdrop-blur-md">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3.5 sm:px-6">
+        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3 sm:px-6">
           <div className="flex items-center gap-2.5">
             <div className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm">
               <IndianRupee className="h-5 w-5" />
@@ -446,22 +464,22 @@ function LeaderboardPage() {
 
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         {/* Hero */}
-        <section className="pt-10 text-center sm:pt-14">
+        <section className="pt-8 text-center sm:pt-10">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/5 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.1em] text-primary">
             <Trophy className="h-3.5 w-3.5" />
             30-Day Challenge
           </div>
-          <h1 className="mt-4 font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+          <h1 className="mt-3 font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Challenge Leaderboard
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-base text-muted-foreground sm:text-lg">
+          <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground sm:text-base">
             See who&apos;s earning the most. Every rupee counts.
           </p>
         </section>
 
         {/* Your standing */}
         {currentUser && (
-          <section className="mt-8 sm:mt-10">
+          <section className="mt-6 sm:mt-8">
             <YourStandingCard
               currentUser={currentUser}
               nextParticipant={nextParticipant}
@@ -471,53 +489,56 @@ function LeaderboardPage() {
         )}
 
         {/* Leaderboard */}
-        <section className="mt-10 sm:mt-12">
+        <section className="mt-8 sm:mt-10">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <Medal className="h-4 w-4 text-muted-foreground" />
-              <h2 className="font-display text-lg font-bold text-foreground sm:text-xl">
+              <h2 className="font-display text-lg font-bold text-foreground">
                 Top earners
               </h2>
             </div>
             <FilterTabs active={filter} onChange={setFilter} />
           </div>
 
-          {/* Top 3 Podium */}
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 sm:grid-cols-3 sm:items-start sm:gap-4">
-            <PodiumCard participant={topThree[0]!} position={1} />
-            <PodiumCard participant={topThree[1]!} position={2} />
-            <PodiumCard participant={topThree[2]!} position={3} />
-          </div>
-
-          {/* Rest of leaderboard */}
-          <div className="mt-8">
-            <div className="mb-2 hidden grid-cols-[3rem_minmax(0,1fr)_auto_auto] gap-4 px-5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground sm:grid">
-              <span>Rank</span>
-              <span>Participant</span>
-              <span className="text-left">Earnings</span>
-              <span className="w-16 text-center">Trend</span>
+          {/* Animated view — re-keyed on filter for a subtle transition */}
+          <div key={filter} className="animate-leaderboard-swap">
+            {/* Compact podium */}
+            <div className="mt-6 grid grid-cols-3 items-end gap-2 rounded-xl border bg-card/60 px-3 pb-0 pt-5 sm:gap-4 sm:px-6">
+              <PodiumSlot participant={topThree[0]!} position={1} />
+              <PodiumSlot participant={topThree[1]!} position={2} />
+              <PodiumSlot participant={topThree[2]!} position={3} />
             </div>
-            <div className="space-y-2">
-              {rest.map((participant) => (
-                <LeaderboardRow key={participant.id} participant={participant} />
-              ))}
+
+            {/* Rest of leaderboard */}
+            <div className="mt-5">
+              <div className="mb-1.5 hidden grid-cols-[2.5rem_minmax(0,1fr)_auto_3.5rem] gap-4 px-4 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground sm:grid">
+                <span>Rank</span>
+                <span>Participant</span>
+                <span className="text-left">Earnings</span>
+                <span className="text-center">Trend</span>
+              </div>
+              <div className="space-y-1.5">
+                {rest.map((participant) => (
+                  <LeaderboardRow key={participant.id} participant={participant} />
+                ))}
+              </div>
             </div>
           </div>
 
           {/* Footer */}
-          <div className="mt-12 border-t pt-8 text-center">
-            <p className="font-display text-lg font-bold text-foreground sm:text-xl">
+          <div className="mt-10 border-t pt-7 text-center">
+            <p className="font-display text-lg font-bold text-foreground">
               Ready to climb higher?
             </p>
-            <p className="mx-auto mt-1.5 max-w-md text-sm text-muted-foreground">
+            <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
               Finish your next task, close a sale or refer a friend — every
               rupee moves you up the leaderboard.
             </p>
-            <button className="mt-5 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-primary/35 active:translate-y-0 active:scale-[0.98]">
+            <button className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-primary/35 active:translate-y-0 active:scale-[0.98]">
               <Zap className="h-4 w-4" />
               Start earning
             </button>
-            <p className="mt-8 pb-2 text-xs text-muted-foreground">
+            <p className="mt-7 pb-2 text-xs text-muted-foreground">
               EYFI · Earn Your First Income — 30-Day Challenge
             </p>
           </div>
