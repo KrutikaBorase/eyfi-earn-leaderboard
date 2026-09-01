@@ -522,9 +522,9 @@ function LeaderboardPage() {
 
         {/* Top 3 Podium */}
         <div className="mt-8 grid grid-cols-3 items-end gap-3 sm:mt-10 sm:gap-5">
-          <PodiumCard participant={topThree[1]} position={2} />
-          <PodiumCard participant={topThree[0]} position={1} />
-          <PodiumCard participant={topThree[2]} position={3} />
+          <PodiumCard participant={topThree[1]!} position={2} />
+          <PodiumCard participant={topThree[0]!} position={1} />
+          <PodiumCard participant={topThree[2]!} position={3} />
         </div>
 
         {/* Motivational message */}
