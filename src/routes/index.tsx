@@ -279,7 +279,7 @@ function PodiumCard({
         </div>
         <div className="mb-3 mt-2 text-gold-foreground/80">{icon}</div>
         <Avatar initials={participant.avatar} className="h-14 w-14 text-base" />
-        <h3 className="mt-3 line-clamp-1 font-display text-lg font-bold text-gold-foreground">
+        <h3 className="mt-3 break-words font-display text-sm font-bold leading-tight text-gold-foreground sm:text-lg">
           {participant.name}
         </h3>
         <p className="mt-1 font-display text-2xl font-bold text-gold-foreground">
