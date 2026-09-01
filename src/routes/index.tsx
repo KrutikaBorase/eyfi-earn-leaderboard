@@ -489,7 +489,7 @@ function LeaderboardPage() {
                 <p className="mt-1 text-sm text-muted-foreground">
                   {currentUser.rank === 1
                     ? "You are leading!"
-                    : `Top ${Math.round((currentUser.rank / ranked.length) * 100)}% of participants`}
+                    : `Rank ${currentUser.rank} of ${ranked.length} participants`}
                 </p>
               </div>
               <div className="rounded-2xl border bg-card p-5 text-left shadow-card sm:p-6">
