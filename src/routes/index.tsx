@@ -333,8 +333,8 @@ function YourStandingCard({
             ringClassName="ring-4 ring-primary/20"
           />
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Your standing
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+              Your Standing
             </p>
             <div className="mt-0.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <span className="font-display text-2xl font-bold text-foreground sm:text-3xl">
@@ -349,7 +349,7 @@ function YourStandingCard({
               </span>
             </div>
             <p className="mt-0.5 text-xs text-muted-foreground">
-              {filter === "allTime" ? "Total earned this season" : "Earned this week"}
+              {filter === "allTime" ? "Total earned" : "Earned this week"}
             </p>
           </div>
         </div>
@@ -438,12 +438,8 @@ function LeaderboardPage() {
               </p>
             </div>
           </div>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/10 px-3 py-1.5 text-xs font-semibold text-success">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
-            </span>
-            Season 3 live
+          <span className="inline-flex items-center rounded-full border border-primary/15 bg-primary/5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-primary">
+            30-Day Challenge
           </span>
         </div>
       </header>
@@ -451,16 +447,15 @@ function LeaderboardPage() {
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         {/* Hero */}
         <section className="pt-10 text-center sm:pt-14">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/5 px-3.5 py-1.5 text-xs font-semibold text-primary">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/5 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.1em] text-primary">
             <Trophy className="h-3.5 w-3.5" />
-            EYFI Challenge
+            30-Day Challenge
           </div>
           <h1 className="mt-4 font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
             Challenge Leaderboard
           </h1>
           <p className="mx-auto mt-3 max-w-md text-base text-muted-foreground sm:text-lg">
-            Ranked by real income earned. Every rupee counts — climb the board
-            and out-earn the competition.
+            See who&apos;s earning the most. Every rupee counts.
           </p>
         </section>
 
@@ -523,7 +518,7 @@ function LeaderboardPage() {
               Start earning
             </button>
             <p className="mt-8 pb-2 text-xs text-muted-foreground">
-              EYFI · Earn Your First Income — Challenge Season 3
+              EYFI · Earn Your First Income — 30-Day Challenge
             </p>
           </div>
         </section>
