@@ -518,7 +518,7 @@ function LeaderboardPage() {
               Start earning
             </button>
             <p className="mt-8 pb-2 text-xs text-muted-foreground">
-              EYFI · Earn Your First Income — Challenge Season 3
+              EYFI · Earn Your First Income — 30-Day Challenge
             </p>
           </div>
         </section>
